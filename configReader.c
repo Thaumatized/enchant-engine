@@ -17,7 +17,8 @@ typedef struct config_fetch_options {
 
 int isEndCharacter(char c)
 {
-    return c == '\n' || c == '#' || c == ';';
+    // 0 is the default charater. It is needed because the last line might not have an end character.
+    return c == '\n' || c == '#' || c == ';' || c == 0;
 }
 
 void stripWhiteSpace(char* str)
@@ -52,7 +53,7 @@ int getConfigurations(char* filename, config_fetch_options* options, int options
     {
         int lineOffset = 0;
         while(lineOffset < MAX_LINE && line[lineOffset] == ' ') lineOffset++;
-        if(lineOffset >= MAX_LINE || line[lineOffset] == '\n' || line[lineOffset] =='#') continue;
+        if(lineOffset >= MAX_LINE || line[lineOffset] == '\n' || line[lineOffset] =='#' || line[lineOffset] ==';') continue;
 
         char name[MAX_LINE];
         char value[MAX_LINE];
