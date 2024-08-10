@@ -20,6 +20,7 @@
 #endif
 
 #include "version.h"
+#include "input.c"
 #include "../game.h"
 
 int main(int argc, char* argv[])
@@ -37,6 +38,7 @@ int main(int argc, char* argv[])
 	while(1)
 	{
 		clock_t FrameStartClock = clock();
+		inputUpdate();
 		update(frame);
 		
 		//Sleep until we have taken up enough time.

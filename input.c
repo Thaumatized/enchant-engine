@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <string.h>
 
 #define MAX_KEYS_IN_COMBINATON 3
 #define MAX_COMBINATIONS_IN_BINDING 2
@@ -13,10 +14,12 @@ struct ActionBinding
     char pressedThisFrame;
 } typedef ActionBinding;
 
-ActionBinding *bindings[] = {
-    {"testbind1", {"A", NULL, NULL, NULL, NULL, NULL}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, 0, 0}
-};
-int bindingsCount;
+ActionBinding *bindings[1];
+int bindingsCount = 1;
+
+memset(bindings, NULL, sizeof(ActionBinding));
+bindings[0]->name = "testbind1";
+bindings[0]->keys[0] = "A";
 
 void inputUpdate()
 {
