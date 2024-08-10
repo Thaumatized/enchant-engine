@@ -1,1 +1,1 @@
-#define ENGINE_VERSION "0.0.3"
+#define ENGINE_VERSION "0.0.4"
