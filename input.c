@@ -12,6 +12,7 @@ struct ActionBinding
     char keysPressedThisFrame[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char pressed;
     char pressedThisFrame;
+    char releasedThisFrame;
 } typedef ActionBinding;
 
 ActionBinding bindings[1];
@@ -25,8 +26,8 @@ void inputInitialize()
     {
         bindings[0].keys[i] = NULL;
     }
-    bindings[0].keys[0] = "A";
-    bindings[0].keys[3] = "B";
+    bindings[0].keys[2] = "A";
+    bindings[0].keys[5] = "B";
 }
 
 void inputZero()
@@ -34,6 +35,7 @@ void inputZero()
     for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
     {
         bindings[bindingIndex].pressedThisFrame = 0;
+        bindings[bindingIndex].releasedThisFrame = 0;
         for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
         {
             bindings[bindingIndex].keysPressedThisFrame[keyIndex] = 0;
@@ -52,54 +54,53 @@ void inputEvent(SDL_Event event)
                 {
                     if(bindings[bindingIndex].keys[keyIndex] != NULL)
                     {
-                    printf("notnull %c\n", bindings[bindingIndex].keys[keyIndex][0]);
-                    //printf("%i %i %s\n", bindingIndex, keyIndex, bindings[bindingIndex]->keys[keyIndex]);
-                    /*if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex]->keys[keyIndex]))
-                    {
-                        bindings[bindingIndex]->keysPressed[keyIndex] = 1;
-                        bindings[bindingIndex]->keysPressedThisFrame[keyIndex] = 1;
-                    }*/
+                        if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex].keys[keyIndex]))
+                        {
+                            bindings[bindingIndex].keysPressed[keyIndex] = 1;
+                            bindings[bindingIndex].keysPressedThisFrame[keyIndex] = 1;
+                        }
                     }   
                 }
             }
             break;
         case SDL_KEYUP:
             printf("event keyup %s\n", SDL_GetKeyName(event.key.keysym.sym));
-            /*for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
+            for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
                 {
-                    if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex]->keys[keyIndex]))
+                    if(bindings[bindingIndex].keys[keyIndex] != NULL)
                     {
-                        bindings[bindingIndex]->keysPressed[keyIndex] = 0;
+                        if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex].keys[keyIndex]))
+                        {
+                            bindings[bindingIndex].keysPressed[keyIndex] = 0;
+                        }
                     }
                 }
-            }*/
+            }
             break;
     }
 }
 
 void inputCheck()
 {
-
-    /*
     for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
     {
-        if(!bindings[bindingIndex]->pressed) // check if was just pressed
+        if(!bindings[bindingIndex].pressed) // check if was just pressed
         {
             for (int combinationIndex = 0; combinationIndex < MAX_COMBINATIONS_IN_BINDING; combinationIndex++)
             {
                 int pressed = 1;
                 for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
                 {
-                    pressed &= bindings[bindingIndex]->keysPressed[keyIndex];
+                    pressed &= bindings[bindingIndex].keysPressed[keyIndex];
                 }
-                pressed &= bindings[bindingIndex]->keysPressedThisFrame[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1];
+                pressed &= bindings[bindingIndex].keysPressedThisFrame[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1];
 
                 if(pressed)
                 {
-                    bindings[bindingIndex]->pressed = 1;
-                    bindings[bindingIndex]->pressedThisFrame = 1;
+                    bindings[bindingIndex].pressed = 1;
+                    bindings[bindingIndex].pressedThisFrame = 1;
                 }
             }
         }
@@ -111,7 +112,7 @@ void inputCheck()
                 pressed = 1;
                 for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
                 {
-                    pressed &= bindings[bindingIndex]->keysPressed[keyIndex];
+                    pressed &= bindings[bindingIndex].keysPressed[keyIndex];
                 }
                 if(pressed)
                 {
@@ -120,9 +121,9 @@ void inputCheck()
             }
             if(!pressed)
             {
-                bindings[bindingIndex]->pressed = 0;
+                bindings[bindingIndex].pressed = 0;
+                bindings[bindingIndex].releasedThisFrame = 1;
             }
         }
     }
-    */
 }
