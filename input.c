@@ -21,10 +21,13 @@ void inputInitialize()
 { 
     printf("Initializing Input\n");
     ActionBinding binding;
-    memset(&binding, 0, sizeof(ActionBinding));
     binding.name = "testbind1";
-    binding.keys[0] = "A";
-    binding.keys[3] = "B";
+    for (int i = 0; i < 6; i++)
+    {
+        binding.keys[i] = NULL;
+    }
+    //binding.keys[0] = "A";
+    //binding.keys[3] = "B";
     bindings[0] = &binding;
 }
 
@@ -49,11 +52,16 @@ void inputEvent(SDL_Event event)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
                 {
-                    if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex]->keys[keyIndex]))
+                    if(bindings[bindingIndex]->keys[keyIndex] != NULL)
                     {
-                        //bindings[bindingIndex]->keysPressed[keyIndex] = 1;
-                        //bindings[bindingIndex]->keysPressedThisFrame[keyIndex] = 1;
-                    }
+                    printf("%s\n", bindings[0]->keys[0]);
+                    //printf("%i %i %s\n", bindingIndex, keyIndex, bindings[bindingIndex]->keys[keyIndex]);
+                    /*if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex]->keys[keyIndex]))
+                    {
+                        bindings[bindingIndex]->keysPressed[keyIndex] = 1;
+                        bindings[bindingIndex]->keysPressedThisFrame[keyIndex] = 1;
+                    }*/
+                    }   
                 }
             }
             break;
