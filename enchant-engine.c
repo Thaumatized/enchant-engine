@@ -23,6 +23,12 @@
 #include "input.c"
 #include "../game.h"
 
+void closeGame()
+{
+	cleanUp();
+	exit(0);
+}
+
 int main(int argc, char* argv[])
 {
 	printf("initializing engine, version %s\n", ENGINE_VERSION);
@@ -33,12 +39,29 @@ int main(int argc, char* argv[])
 
 	printf("initializing game\n");
 	initialize(argc, argv);
-
+	inputInitialize();
 	
 	while(1)
 	{
 		clock_t FrameStartClock = clock();
-		inputUpdate();
+
+
+		inputZero();
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+				case SDL_QUIT:
+					printf("event quit\n");
+					closeGame();
+					break;
+				case SDL_KEYDOWN:
+				case SDL_KEYUP:
+					inputEvent(event);
+					break;
+			}
+		}
+		inputCheck();
+
 		update(frame);
 		
 		//Sleep until we have taken up enough time.
@@ -55,10 +78,4 @@ int main(int argc, char* argv[])
 
 		frame++;
 	}
-}
-
-void closeGame()
-{
-	cleanUp();
-	exit(0);
 }
