@@ -14,31 +14,29 @@ struct ActionBinding
     char pressedThisFrame;
 } typedef ActionBinding;
 
-ActionBinding *bindings[1];
+ActionBinding bindings[1];
 int bindingsCount = 1;
 
 void inputInitialize()
 { 
     printf("Initializing Input\n");
-    ActionBinding binding;
-    binding.name = "testbind1";
+    bindings[0].name = "testbind1";
     for (int i = 0; i < 6; i++)
     {
-        binding.keys[i] = NULL;
+        bindings[0].keys[i] = NULL;
     }
-    //binding.keys[0] = "A";
-    //binding.keys[3] = "B";
-    bindings[0] = &binding;
+    bindings[0].keys[0] = "A";
+    bindings[0].keys[3] = "B";
 }
 
 void inputZero()
 {
     for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
     {
-        bindings[bindingIndex]->pressedThisFrame = 0;
+        bindings[bindingIndex].pressedThisFrame = 0;
         for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
         {
-            bindings[bindingIndex]->keysPressedThisFrame[keyIndex] = 0;
+            bindings[bindingIndex].keysPressedThisFrame[keyIndex] = 0;
         }
     }
 }
@@ -52,9 +50,9 @@ void inputEvent(SDL_Event event)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
                 {
-                    if(bindings[bindingIndex]->keys[keyIndex] != NULL)
+                    if(bindings[bindingIndex].keys[keyIndex] != NULL)
                     {
-                    printf("%s\n", bindings[0]->keys[0]);
+                    printf("notnull %c\n", bindings[bindingIndex].keys[keyIndex][0]);
                     //printf("%i %i %s\n", bindingIndex, keyIndex, bindings[bindingIndex]->keys[keyIndex]);
                     /*if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), bindings[bindingIndex]->keys[keyIndex]))
                     {
