@@ -1,2 +1,5 @@
-#define MAX_KEYS_IN_COMBINATON 3
-#define MAX_COMBINATIONS_IN_BINDING 2
+int setBinding(char *name, char *defaultBindingString);
+
+int bindingPressed(int index);
+int bindingPressedThisFrame(int index);
+int bindingReleasedThisFrame(int index);

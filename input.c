@@ -15,19 +15,11 @@ struct ActionBinding
     char releasedThisFrame;
 } typedef ActionBinding;
 
-ActionBinding bindings[1];
-int bindingsCount = 1;
+ActionBinding bindings[];
+int bindingsCount = 0;
 
 void inputInitialize()
-{ 
-    printf("Initializing Input\n");
-    bindings[0].name = "testbind1";
-    for (int i = 0; i < 6; i++)
-    {
-        bindings[0].keys[i] = NULL;
-    }
-    bindings[0].keys[2] = "A";
-    bindings[0].keys[5] = "B";
+{
 }
 
 void inputZero()
