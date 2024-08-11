@@ -32,6 +32,8 @@ void closeGame()
 int main(int argc, char* argv[])
 {
 	printf("initializing engine, version %s\n", ENGINE_VERSION);
+	
+	initializeInputs();
 
 	int frameRate = 60;
 	int clocksPerFrame = CLOCKS_PER_SEC / frameRate;
@@ -39,7 +41,6 @@ int main(int argc, char* argv[])
 
 	printf("initializing game\n");
 	initialize(argc, argv);
-	inputInitialize();
 	
 	while(1)
 	{
