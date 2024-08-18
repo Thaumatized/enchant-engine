@@ -117,6 +117,8 @@ int setBinding(char *name, char *defaultBindingString)
             defaultBindingStringIndex++;
         }
     }
+
+    return bindingsCount - 1;
 }
 
 int bindingPressed(int index)
@@ -158,7 +160,7 @@ void inputEvent(SDL_Event event)
                 {
                     if((*bindings)[bindingIndex].keys[keyIndex] != SDLK_UNKNOWN)
                     {
-                        if(event.key.keysym.sym, (*bindings)[bindingIndex].keys[keyIndex])
+                        if(event.key.keysym.sym == (*bindings)[bindingIndex].keys[keyIndex])
                         {
                             (*bindings)[bindingIndex].keysPressed[keyIndex] = 1;
                             (*bindings)[bindingIndex].keysPressedThisFrame[keyIndex] = 1;
@@ -239,8 +241,5 @@ void inputCheck()
                 (*bindings)[bindingIndex].releasedThisFrame = 1;
             }
         }
-
-        printf("%s: %i %i %i    ", (*bindings)[bindingIndex].name, (*bindings)[bindingIndex].pressed, (*bindings)[bindingIndex].pressedThisFrame, (*bindings)[bindingIndex].releasedThisFrame);
     }
-    printf("\n");
 }
