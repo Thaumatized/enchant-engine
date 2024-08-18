@@ -141,5 +141,8 @@ void inputCheck()
                 (*bindings)[bindingIndex].releasedThisFrame = 1;
             }
         }
+
+        printf("%s: %i %i %i    ", (*bindings)[bindingIndex].name, (*bindings)[bindingIndex].pressed, (*bindings)[bindingIndex].pressedThisFrame, (*bindings)[bindingIndex].releasedThisFrame);
     }
+    printf("\n");
 }
