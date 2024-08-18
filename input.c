@@ -89,9 +89,10 @@ void inputEvent(SDL_Event event)
                     {
                         if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), (*bindings)[bindingIndex].keys[keyIndex]))
                         {
+                            printf("A key unpressed in binding %s\n", (*bindings)[bindingIndex].name);
                             (*bindings)[bindingIndex].keysPressed[keyIndex] = 0;
                         }
-                    }
+                    }   
                 }
             }
             break;
@@ -109,7 +110,7 @@ void inputCheck()
                 int pressed = 1;
                 for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
                 {
-                    pressed &= (*bindings)[bindingIndex].keysPressed[keyIndex];
+                    pressed &= (*bindings)[bindingIndex].keys[keyIndex] == NULL || (*bindings)[bindingIndex].keysPressed[keyIndex];
                 }
                 pressed &= (*bindings)[bindingIndex].keysPressedThisFrame[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1];
 
@@ -126,9 +127,19 @@ void inputCheck()
             for (int combinationIndex = 0; combinationIndex < MAX_COMBINATIONS_IN_BINDING; combinationIndex++)
             {
                 pressed = 1;
-                for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
+                // If last key in combination is null it is unbound
+                if((*bindings)[bindingIndex].keys[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1] == NULL)
                 {
-                    pressed &= (*bindings)[bindingIndex].keysPressed[keyIndex];
+                    pressed = 0;
+                }
+                else
+                {
+                    for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
+                    {
+                        pressed &= 
+                        (*bindings)[bindingIndex].keys[keyIndex] == NULL
+                        || (*bindings)[bindingIndex].keysPressed[keyIndex];
+                    }
                 }
                 if(pressed)
                 {
@@ -141,8 +152,5 @@ void inputCheck()
                 (*bindings)[bindingIndex].releasedThisFrame = 1;
             }
         }
-
-        printf("%s: %i %i %i    ", (*bindings)[bindingIndex].name, (*bindings)[bindingIndex].pressed, (*bindings)[bindingIndex].pressedThisFrame, (*bindings)[bindingIndex].releasedThisFrame);
     }
-    printf("\n");
 }
