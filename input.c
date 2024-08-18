@@ -7,7 +7,7 @@
 struct ActionBinding
 {
 	char* name; // Important for settings menu and saving
-	char* keys[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
+	SDL_Keycode keys[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char keysPressed[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char keysPressedThisFrame[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char pressed;
@@ -32,18 +32,107 @@ int setBinding(char *name, char *defaultBindingString)
         printf("ERROR: Couldn't allocate memory for inputs");
         exit(1);
     }
+
     (*bindings)[bindingsCount-1].name = name;
-    (*bindings)[bindingsCount-1].keys[0] = NULL;
-    (*bindings)[bindingsCount-1].keys[1] = NULL;
-    (*bindings)[bindingsCount-1].keys[2] = defaultBindingString;
-    (*bindings)[bindingsCount-1].keys[3] = NULL;
-    (*bindings)[bindingsCount-1].keys[4] = NULL;
-    (*bindings)[bindingsCount-1].keys[5] = NULL;
+
+
+    int defaultBindingStringIndex = 0;
+    for (int combinationIndex = 0; combinationIndex < MAX_COMBINATIONS_IN_BINDING; combinationIndex++)
+    {
+        int keysInCombination = 0;
+
+        //get key codes
+        for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
+        {
+            char keyName[1024];
+            memset(keyName, '\0', 1024);
+            int keyNameIndex = 0;
+            int escaping = 0;
+            while (defaultBindingString[defaultBindingStringIndex] != '\0')
+            {
+                if(
+                    (
+                        defaultBindingString[defaultBindingStringIndex] == ';'
+                        || defaultBindingString[defaultBindingStringIndex] ==  '+'
+                    )
+                    && !escaping
+                )
+                {
+                    break;
+                }
+                if(defaultBindingString[defaultBindingStringIndex] == '\\' && !escaping)
+                {
+                    escaping = 1;
+                    defaultBindingStringIndex++;
+                    continue;
+                }
+
+                keyName[keyNameIndex] = defaultBindingString[defaultBindingStringIndex];
+                keyNameIndex++;
+                defaultBindingStringIndex++;
+            }
+            
+            SDL_KeyCode keyCode = SDL_GetKeyFromName(keyName);
+            (*bindings)[bindingsCount-1].keys[keyIndex] = keyCode;
+            if(keyCode != SDLK_UNKNOWN)
+            {
+                keysInCombination++;
+            }
+
+            if(defaultBindingString[defaultBindingStringIndex] == ';' || defaultBindingString[defaultBindingStringIndex] == '\0')
+            {
+                break;
+            }
+            else
+            {
+                defaultBindingStringIndex++;
+            }
+        }
+
+        //move SDLK_UNKNOWNs to start
+        int shift = MAX_KEYS_IN_COMBINATON - keysInCombination;
+        if(keysInCombination > 0 && shift > 0)
+        {
+            for(int keyIndex = MAX_KEYS_IN_COMBINATON*combinationIndex + MAX_KEYS_IN_COMBINATON-1; keyIndex > MAX_KEYS_IN_COMBINATON*combinationIndex + shift-1; keyIndex--)
+            {
+                (*bindings)[bindingsCount-1].keys[keyIndex] = (*bindings)[bindingsCount-1].keys[keyIndex-shift];
+            }
+            for(int keyIndex = MAX_KEYS_IN_COMBINATON*combinationIndex; keyIndex < MAX_KEYS_IN_COMBINATON*combinationIndex + shift; keyIndex++)
+            {
+                (*bindings)[bindingsCount-1].keys[keyIndex] = SDLK_UNKNOWN;
+            }
+        }
+
+        for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
+        {
+            printf("Binding %s Key %i: %i - %s\n", name, keyIndex, (*bindings)[bindingsCount-1].keys[keyIndex], SDL_GetKeyName((*bindings)[bindingsCount-1].keys[keyIndex]));
+        }
+
+        if(defaultBindingString[defaultBindingStringIndex] == '\0')
+        {
+            break;
+        }
+        else
+        {
+            defaultBindingStringIndex++;
+        }
+    }
 }
 
-int bindingPressed(int index);
-int bindingPressedThisFrame(int index);
-int bindingReleasedThisFrame(int index);
+int bindingPressed(int index)
+{
+    return (*bindings)[index].pressed;
+}
+
+int bindingPressedThisFrame(int index)
+{
+    return (*bindings)[index].pressedThisFrame;
+}
+
+int bindingReleasedThisFrame(int index)
+{
+    return (*bindings)[index].releasedThisFrame;
+}
 
 void inputZero()
 {
@@ -67,11 +156,10 @@ void inputEvent(SDL_Event event)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
                 {
-                    if((*bindings)[bindingIndex].keys[keyIndex] != NULL)
+                    if((*bindings)[bindingIndex].keys[keyIndex] != SDLK_UNKNOWN)
                     {
-                        if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), (*bindings)[bindingIndex].keys[keyIndex]))
+                        if(event.key.keysym.sym, (*bindings)[bindingIndex].keys[keyIndex])
                         {
-                            printf("A key pressed in binding %s\n", (*bindings)[bindingIndex].name);
                             (*bindings)[bindingIndex].keysPressed[keyIndex] = 1;
                             (*bindings)[bindingIndex].keysPressedThisFrame[keyIndex] = 1;
                         }
@@ -85,11 +173,10 @@ void inputEvent(SDL_Event event)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
                 {
-                    if((*bindings)[bindingIndex].keys[keyIndex] != NULL)
+                    if((*bindings)[bindingIndex].keys[keyIndex] != SDLK_UNKNOWN)
                     {
-                        if(!strcmp(SDL_GetKeyName(event.key.keysym.sym), (*bindings)[bindingIndex].keys[keyIndex]))
-                        {
-                            printf("A key unpressed in binding %s\n", (*bindings)[bindingIndex].name);
+                        if(event.key.keysym.sym == (*bindings)[bindingIndex].keys[keyIndex])
+                        {                        
                             (*bindings)[bindingIndex].keysPressed[keyIndex] = 0;
                         }
                     }   
@@ -110,7 +197,7 @@ void inputCheck()
                 int pressed = 1;
                 for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
                 {
-                    pressed &= (*bindings)[bindingIndex].keys[keyIndex] == NULL || (*bindings)[bindingIndex].keysPressed[keyIndex];
+                    pressed &= (*bindings)[bindingIndex].keys[keyIndex] == SDLK_UNKNOWN || (*bindings)[bindingIndex].keysPressed[keyIndex];
                 }
                 pressed &= (*bindings)[bindingIndex].keysPressedThisFrame[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1];
 
@@ -127,8 +214,8 @@ void inputCheck()
             for (int combinationIndex = 0; combinationIndex < MAX_COMBINATIONS_IN_BINDING; combinationIndex++)
             {
                 pressed = 1;
-                // If last key in combination is null it is unbound
-                if((*bindings)[bindingIndex].keys[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1] == NULL)
+                // If last key in combination is SDLK_UNKNOWN it is unbound
+                if((*bindings)[bindingIndex].keys[combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON-1] == SDLK_UNKNOWN)
                 {
                     pressed = 0;
                 }
@@ -137,7 +224,7 @@ void inputCheck()
                     for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
                     {
                         pressed &= 
-                        (*bindings)[bindingIndex].keys[keyIndex] == NULL
+                        (*bindings)[bindingIndex].keys[keyIndex] == SDLK_UNKNOWN
                         || (*bindings)[bindingIndex].keysPressed[keyIndex];
                     }
                 }
@@ -152,5 +239,8 @@ void inputCheck()
                 (*bindings)[bindingIndex].releasedThisFrame = 1;
             }
         }
+
+        printf("%s: %i %i %i    ", (*bindings)[bindingIndex].name, (*bindings)[bindingIndex].pressed, (*bindings)[bindingIndex].pressedThisFrame, (*bindings)[bindingIndex].releasedThisFrame);
     }
+    printf("\n");
 }
