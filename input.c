@@ -103,6 +103,16 @@ int setBinding(char *name, char *defaultBindingString)
             }
         }
 
+        //clear pressed state
+        for (int i = 0; i < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; i++)
+        {
+            (*bindings)[bindingsCount-1].keysPressed[i] = 0;
+            (*bindings)[bindingsCount-1].keysPressedThisFrame[i] = 0;
+        }
+        (*bindings)[bindingsCount-1].pressed = 0;
+        (*bindings)[bindingsCount-1].pressedThisFrame = 0;
+        (*bindings)[bindingsCount-1].releasedThisFrame = 0;
+
         for (int keyIndex = combinationIndex*MAX_KEYS_IN_COMBINATON; keyIndex < combinationIndex*MAX_KEYS_IN_COMBINATON+MAX_KEYS_IN_COMBINATON; keyIndex++)
         {
             printf("Binding %s Key %i: %i - %s\n", name, keyIndex, (*bindings)[bindingsCount-1].keys[keyIndex], SDL_GetKeyName((*bindings)[bindingsCount-1].keys[keyIndex]));
