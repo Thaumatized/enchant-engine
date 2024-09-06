@@ -37,7 +37,7 @@ void stripWhiteSpace(char* str)
     memset(str + newLen, 0, len-newLen);
 }
 
-int getConfigurations(char* filename, config_fetch_options* options, int optionsCount)
+void getConfigurations(char* filename, config_fetch_options* options, int optionsCount)
 {
     //read config.ini for values
     FILE *fp;
@@ -76,7 +76,6 @@ int getConfigurations(char* filename, config_fetch_options* options, int options
             }
             lineOffset++;
         }
-        name[resultOffset] == '\n';
         lineOffset++;
         resultOffset = 0;
         while(!isEndCharacter(line[lineOffset]))
@@ -85,7 +84,6 @@ int getConfigurations(char* filename, config_fetch_options* options, int options
             resultOffset++;
             lineOffset++;
         }
-        name[resultOffset] == '\n';
 
         stripWhiteSpace(name);
         stripWhiteSpace(value);

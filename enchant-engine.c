@@ -13,7 +13,7 @@
 	// for sleep
 	#include <windows.h>
 
-	int usleep(int microseconds)
+	void usleep(int microseconds)
 	{
 		Sleep(microseconds / 1000);
 	}
@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 
 	printf("initializing game\n");
 	initialize(argc, argv);
-
 	
 	while(1)
 	{
