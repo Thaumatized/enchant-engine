@@ -163,7 +163,7 @@ void inputEvent(SDL_Event event)
 {
     switch (event.type) {
         case SDL_KEYDOWN:
-            printf("event keydown %s\n", SDL_GetKeyName(event.key.keysym.sym));
+            //printf("event keydown %s\n", SDL_GetKeyName(event.key.keysym.sym));
             for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
@@ -181,7 +181,7 @@ void inputEvent(SDL_Event event)
             }
             break;
         case SDL_KEYUP:
-            printf("event keyup %s\n", SDL_GetKeyName(event.key.keysym.sym));
+            //printf("event keyup %s\n", SDL_GetKeyName(event.key.keysym.sym));
             for (int bindingIndex = 0; bindingIndex < bindingsCount; bindingIndex++)
             {
                 for (int keyIndex = 0; keyIndex < MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING; keyIndex++)
