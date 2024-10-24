@@ -23,7 +23,7 @@ void initializeInputs()
     bindings = malloc(0);
 }
 
-int setBinding(char *name, char *defaultBindingString)
+int bindAction(char *name, char *defaultBindingString)
 {
     bindingsCount++;
     bindings = realloc(bindings, bindingsCount*sizeof(ActionBinding));
@@ -131,17 +131,17 @@ int setBinding(char *name, char *defaultBindingString)
     return bindingsCount - 1;
 }
 
-int bindingPressed(int index)
+int actionPressed(int index)
 {
     return (*bindings)[index].pressed;
 }
 
-int bindingPressedThisFrame(int index)
+int actionPressedThisFrame(int index)
 {
     return (*bindings)[index].pressedThisFrame;
 }
 
-int bindingReleasedThisFrame(int index)
+int actionReleasedThisFrame(int index)
 {
     return (*bindings)[index].releasedThisFrame;
 }

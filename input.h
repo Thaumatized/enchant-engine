@@ -1,5 +1,5 @@
-int setBinding(char *name, char *defaultBindingString);
+int bindAction(char *name, char *defaultBindingString, char *defaultControllerBindingString);
 
-int bindingPressed(int index);
-int bindingPressedThisFrame(int index);
-int bindingReleasedThisFrame(int index);
+int actionPressed(int index);
+int actionPressedThisFrame(int index);
+int actionReleasedThisFrame(int index);
