@@ -1,4 +1,4 @@
-int bindAction(char *name, char *defaultBindingString, char *defaultControllerBindingString);
+int bindAction(char *name, char *defaultBindingString);
 
 int actionPressed(int index);
 int actionPressedThisFrame(int index);
