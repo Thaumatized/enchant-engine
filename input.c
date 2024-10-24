@@ -6,7 +6,7 @@
 
 struct ActionBinding
 {
-	char* name; // Important for settings menu and saving
+	char* name; // used for settings menu and saving
 	SDL_Keycode keys[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char keysPressed[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
     char keysPressedThisFrame[MAX_KEYS_IN_COMBINATON * MAX_COMBINATIONS_IN_BINDING];
@@ -172,8 +172,9 @@ void inputEvent(SDL_Event event)
                     {
                         if(event.key.keysym.sym == (*bindings)[bindingIndex].keys[keyIndex])
                         {
+                            // We only want to set this if they key isn't already pressed beacause letter keys that write a symbol repeat
+                            (*bindings)[bindingIndex].keysPressedThisFrame[keyIndex] = !(*bindings)[bindingIndex].keysPressed[keyIndex];
                             (*bindings)[bindingIndex].keysPressed[keyIndex] = 1;
-                            (*bindings)[bindingIndex].keysPressedThisFrame[keyIndex] = 1;
                         }
                     }   
                 }
