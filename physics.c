@@ -17,17 +17,19 @@ void physicsUpdate()
     }
 }
 
-physics_component* createPhysicsComponent(int entityID)
+physics_component *createPhysicsComponent(int entityID)
 {
     physics_components[entityID].entityID = entityID;
-    physics_components[entityID].position = {0, 0};
-    physics_components[entityID].velocity = {0, 0};
+    physics_components[entityID].position.x = 0;
+    physics_components[entityID].position.y = 0;
+    physics_components[entityID].velocity.x = 0;
+    physics_components[entityID].velocity.y = 0;
     physics_components[entityID].rotation = 0;
-    physics_components[entityID].angularRotation = 0;
-    return *physics_components[entityID];
+    physics_components[entityID].angularVelocity = 0;
+    return  &physics_components[entityID];
 }
 
-getPhysicsComponent(int entityID)
+physics_component *getPhysicsComponent(int entityID)
 {
-    return *physics_components[entityID];
+    return &physics_components[entityID];
 }
