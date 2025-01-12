@@ -1,0 +1,1 @@
+#define OBJECT_LIMIT 1024

@@ -21,7 +21,34 @@
 
 #include "version.h"
 #include "input.c"
+#include "physics.c"
 #include "../game.h"
+#include "CONSTANTS.h"
+
+char entities[OBJECT_LIMIT];
+int currentEntityIndex = 0;
+int createEntity()
+{
+	int entitiesGoneTrough = 0;
+	while(entities[currentEntityIndex] != 0 && entitiesGoneTrough < OBJECT_LIMIT)
+	{
+		currentEntityIndex++;
+		entitiesGoneTrough++;
+		if(currentEntityIndex >= OBJECT_LIMIT)
+		{
+			currentEntityIndex -= OBJECT_LIMIT;
+		}
+	}
+
+	if(entities[currentEntityIndex] != 0)
+	{
+		printf("ERROR: RAN OUT OF ENTITY SLOTS");
+		exit(1);
+	}
+
+	entities[currentEntityIndex] = 1;
+	return currentEntityIndex;
+}
 
 void closeGame()
 {
@@ -63,6 +90,7 @@ int main(int argc, char* argv[])
 		}
 		inputCheck();
 
+		physicsUpdate();
 		update(frame);
 		
 		//Sleep until we have taken up enough time.
