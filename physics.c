@@ -13,9 +13,8 @@ void physicsUpdate()
 {
     for(int i = 0; i < component_count; i++)
     {
-        Entity entity = *getEntity(PhysicsComponents[i].entityID);
-        entity.position.x += PhysicsComponents[i].velocity.x;
-        entity.position.y += PhysicsComponents[i].velocity.y;
+        PhysicsComponents[i].position.x += PhysicsComponents[i].velocity.x;
+        PhysicsComponents[i].position.y += PhysicsComponents[i].velocity.y;
     }
 }
 
