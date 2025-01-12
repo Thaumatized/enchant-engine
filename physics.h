@@ -1,13 +1,13 @@
 #include "eeMath.h"
 
-typedef struct physics_component {
+typedef struct PhysicsComponent {
     int entityID;
     Vector2 position;
     Vector2 velocity;
     float rotation;
     float angularVelocity;
-} physics_component;
+} PhysicsComponent;
 
-physics_component* createPhysicsComponent(int entityID);
+PhysicsComponent* createPhysicsComponent(int entityID);
 
-physics_component* getPhysicsComponent(int entityID);
+PhysicsComponent* getPhysicsComponent(int entityID);
