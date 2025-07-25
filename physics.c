@@ -18,16 +18,16 @@ void physicsUpdate()
     }
 }
 
-PhysicsComponent *createPhysicsComponent(int entityID)
+PhysicsComponent *createPhysicsComponent(int entityId)
 {
-    PhysicsComponents[entityID].entityID = entityID;
-    PhysicsComponents[entityID].velocity.x = 0;
-    PhysicsComponents[entityID].velocity.y = 0;
-    PhysicsComponents[entityID].angularVelocity = 0;
-    return  &PhysicsComponents[entityID];
+    PhysicsComponents[entityId].entityId = entityId;
+    PhysicsComponents[entityId].velocity.x = 0;
+    PhysicsComponents[entityId].velocity.y = 0;
+    PhysicsComponents[entityId].angularVelocity = 0;
+    return  &PhysicsComponents[entityId];
 }
 
-PhysicsComponent *getPhysicsComponent(int entityID)
+PhysicsComponent *getPhysicsComponent(int entityId)
 {
-    return &PhysicsComponents[entityID];
+    return &PhysicsComponents[entityId];
 }

@@ -1,13 +1,15 @@
+#pragma once
+
 #include "eeMath.h"
 
 typedef struct PhysicsComponent {
-    int entityID;
-    Vector2 position;
-    Vector2 velocity;
+    int entityId;
+    Vector3 position;
+    Vector3 velocity;
     float rotation;
     float angularVelocity;
 } PhysicsComponent;
 
-PhysicsComponent* createPhysicsComponent(int entityID);
+PhysicsComponent* createPhysicsComponent(int entityId);
 
-PhysicsComponent* getPhysicsComponent(int entityID);
+PhysicsComponent* getPhysicsComponent(int entityId);

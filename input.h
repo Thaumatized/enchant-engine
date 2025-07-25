@@ -1,3 +1,5 @@
+#pragma once
+
 int bindAction(char *name, char *defaultBindingString);
 
 int actionPressed(int index);
